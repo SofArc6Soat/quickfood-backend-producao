@@ -19,14 +19,22 @@ namespace Api.Controllers
                 return ErrorBadRequestModelState(ModelState);
             }
 
-            var result = await pedidoController.AlterarStatusAsync(pedidoId, pedidoStatusDto, cancellationToken);
-
-            if (!result)
+            try
             {
-                return BadRequest(new BaseApiResponse { Success = false, Errors = new List<string> { "Status inválido." } });
-            }
+                var result = await pedidoController.AlterarStatusAsync(pedidoId, pedidoStatusDto, cancellationToken);
 
-            return CustomResponsePutPatch(pedidoStatusDto, result);
+                if (!result)
+                {
+                    return BadRequest(new BaseApiResponse { Success = false, Errors = new List<string> { "Status inválido." } });
+                }
+
+                return CustomResponsePutPatch(pedidoStatusDto, result);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (ex) if necessary
+                return StatusCode(500, new BaseApiResponse { Success = false, Errors = new List<string> { "Ocorreu um erro ao processar a solicitação.", ex.Message } });
+            }
         }
     }
 }

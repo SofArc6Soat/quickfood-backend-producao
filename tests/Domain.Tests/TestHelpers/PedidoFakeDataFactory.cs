@@ -18,8 +18,8 @@ public static class PedidoFakeDataFactory
         Status = PedidoStatus.Rascunho.ToString(),
         ValorTotal = 100.00m,
         DataPedido = DateTime.Now,
-        Itens =
-        [
+        Itens = new List<PedidoItemDb>
+        {
             new PedidoItemDb
             {
                 PedidoId = ObterGuid(),
@@ -27,7 +27,18 @@ public static class PedidoFakeDataFactory
                 Quantidade = 2,
                 ValorUnitario = 10.00m
             }
-        ]
+        }
+    };
+
+    public static PedidoDb CriarPedidoDbInvalido() => new()
+    {
+        Id = Guid.Empty, // ID inválido
+        NumeroPedido = 0, // Número de pedido inválido
+        ClienteId = null, // ClienteId nulo
+        Status = string.Empty, // Status vazio
+        ValorTotal = -10.00m, // Valor total negativo
+        DataPedido = DateTime.MinValue, // Data de pedido inválida
+        Itens = new List<PedidoItemDb>() // Lista de itens vazia
     };
 
     public static Guid ObterGuid() => Guid.Parse("d290f1ee-6c54-4b01-90e6-d701748f0851");
