@@ -5,6 +5,7 @@ using Core.WebApi.DependencyInjection;
 using Gateways.DependencyInjection;
 using Infra.Context;
 using System.Diagnostics.CodeAnalysis;
+using Worker.DependencyInjection;
 
 namespace Api
 {
@@ -41,7 +42,20 @@ namespace Api
             services.AddHealthCheckConfig(settings.ConnectionStrings.DefaultConnection);
 
             services.AddControllerDependencyServices();
-            services.AddGatewayDependencyServices(settings.ConnectionStrings.DefaultConnection);
+
+            var sqsQueues = new Queues
+            {
+                QueuePedidoStatusAlteradoEvent = settings.AwsSqsSettings.QueuePedidoStatusAlteradoEvent
+            };
+
+            services.AddGatewayDependencyServices(settings.ConnectionStrings.DefaultConnection, sqsQueues);
+
+            var workerQueues = new WorkerQueues
+            {
+                QueuePedidoRecebidoEvent = settings.AwsSqsSettings.QueuePedidoRecebidoEvent
+            };
+
+            services.AddWorkerDependencyServices(workerQueues);
         }
 
         public static void Configure(IApplicationBuilder app, ApplicationDbContext context)

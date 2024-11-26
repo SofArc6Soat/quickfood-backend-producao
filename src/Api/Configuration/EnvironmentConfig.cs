@@ -22,12 +22,21 @@ namespace Api.Configuration
         public ConnectionStrings ConnectionStrings { get; set; } = new ConnectionStrings();
 
         public CognitoSettings CognitoSettings { get; set; } = new CognitoSettings();
+
+        public AwsSqsSettings AwsSqsSettings { get; set; } = new AwsSqsSettings();
     }
 
     [ExcludeFromCodeCoverage]
     public record ConnectionStrings
     {
         public string DefaultConnection { get; set; } = string.Empty;
+    }
+
+    [ExcludeFromCodeCoverage]
+    public record AwsSqsSettings
+    {
+        public string QueuePedidoRecebidoEvent { get; set; } = string.Empty;
+        public string QueuePedidoStatusAlteradoEvent { get; set; } = string.Empty;
     }
 
     [ExcludeFromCodeCoverage]

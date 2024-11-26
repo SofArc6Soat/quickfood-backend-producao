@@ -1,11 +1,13 @@
-﻿using Domain.Entities;
+﻿using Core.Infra.MessageBroker;
+using Domain.Entities;
 using Domain.ValueObjects;
+using Gateways.Dtos.Events;
 using Infra.Dto;
 using Infra.Repositories;
 
 namespace Gateways
 {
-    public class PedidoGateway(IPedidoRepository pedidoRepository) : IPedidoGateway
+    public class PedidoGateway(IPedidoRepository pedidoRepository, ISqsService<PedidoStatusAlteradoEvent> sqs) : IPedidoGateway
     {
         public async Task<bool> AtualizarPedidoAsync(Pedido pedido, CancellationToken cancellationToken)
         {
@@ -21,7 +23,7 @@ namespace Gateways
 
             await pedidoRepository.UpdateAsync(pedidoDto, cancellationToken);
 
-            return await pedidoRepository.UnitOfWork.CommitAsync(cancellationToken);
+            return await pedidoRepository.UnitOfWork.CommitAsync(cancellationToken) && await sqs.SendMessageAsync(GerarPedidoStatusAlteradoEvent(pedidoDto));
         }
 
         public async Task<Pedido?> ObterPedidoAsync(Guid id, CancellationToken cancellationToken)
@@ -36,5 +38,11 @@ namespace Gateways
             _ = Enum.TryParse(pedidoDto.Status, out PedidoStatus status);
             return new Pedido(pedidoDto.Id, pedidoDto.NumeroPedido, pedidoDto.ClienteId, status, pedidoDto.ValorTotal, pedidoDto.DataPedido);
         }
+
+        private static PedidoStatusAlteradoEvent GerarPedidoStatusAlteradoEvent(PedidoDb pedidoDb) => new()
+        {
+            Id = pedidoDb.Id,
+            Status = pedidoDb.Status
+        };
     }
 }

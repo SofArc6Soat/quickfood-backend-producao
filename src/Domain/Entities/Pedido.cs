@@ -12,18 +12,6 @@ namespace Domain.Entities
         public decimal ValorTotal { get; private set; }
         public DateTime DataPedido { get; private set; }
 
-        private readonly List<PedidoItem> _pedidoItems;
-        public IReadOnlyCollection<PedidoItem> PedidoItems => _pedidoItems;
-
-        public Pedido(Guid id, Guid? clienteId)
-        {
-            Id = id;
-            ClienteId = clienteId;
-            _pedidoItems = [];
-            Status = PedidoStatus.Rascunho;
-            DataPedido = DateTime.Now;
-        }
-
         public Pedido(Guid id, int numeroPedido, Guid? clienteId, PedidoStatus status, decimal valorTotal, DateTime dataCricacao)
         {
             Id = id;
