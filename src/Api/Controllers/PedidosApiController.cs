@@ -21,6 +21,11 @@ namespace Api.Controllers
 
             var result = await pedidoController.AlterarStatusAsync(pedidoId, pedidoStatusDto, cancellationToken);
 
+            if (!result)
+            {
+                return BadRequest(new BaseApiResponse { Success = false, Errors = new List<string> { "Status inválido." } });
+            }
+
             return CustomResponsePutPatch(pedidoStatusDto, result);
         }
     }
