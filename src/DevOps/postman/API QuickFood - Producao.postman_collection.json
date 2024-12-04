@@ -27,7 +27,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"status\": \"<string>\"\n}",
+											"raw": "{\n  \"status\": \"EmPreparacao\"\n}",
 											"options": {
 												"raw": {
 													"headerFamily": "json",
@@ -506,7 +506,14 @@
 		}
 	],
 	"auth": {
-		"type": "bearer"
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "",
+				"type": "string"
+			}
+		]
 	},
 	"event": [
 		{
